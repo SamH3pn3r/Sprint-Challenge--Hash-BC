@@ -1,5 +1,6 @@
 import hashlib
 import requests
+import math 
 
 import sys
 import json
@@ -25,20 +26,15 @@ def proof_of_work(last_proof):
     start = timer()
 
     print("Searching for next proof")
-    proof = 0
+    proof = random.randint(0, sys.maxsize)
     #  TODO: Your code here
     # prev_proof hash
-    prev_proof = json.dumps(last_proof, sort_keys=True)
-    prev_proof_encoded = f'{last_proof}'.encode()
-    prev_proof_hash = hashlib.sha256(prev_proof_encoded).hexdigest()
-    # new proof
     
-    new_proof = f'{proof}{prev_proof_hash}'.encode()
-    new_proof_hash = hashlib.sha256(new_proof).hexdigest()
-    return
-    while not valid_proof(prev_proof_hash, new_proof_hash):
+    # return
+    while not valid_proof(last_proof, proof):
         proof += 1
-
+        print(proof)
+        # print(42, proof, new_proof_hash)
     print("Proof found: " + str(proof) + " in " + str(timer() - start))
     return proof
 
@@ -50,10 +46,16 @@ def valid_proof(last_hash, proof):
 
     IE:  last_hash: ...AE9123456, new hash 123456888...
     """
+
     print("")
-    print(57,last_hash[58:], proof[:6])
+
     # TODO: Your code here!
-    return last_hash[58:] == proof[:6]
+    prev_proof_hash = hashlib.sha256(f'{last_hash}'.encode()).hexdigest()
+    # prev_proof_hash = hashlib.sha256(prev_proof_encoded).hexdigest()
+    # new proof
+    new_proof_hash = hashlib.sha256(f'{proof}'.encode()).hexdigest()
+    # print(54,prev_proof_hash[-6:], new_proof_hash[:6])
+    return prev_proof_hash[-6:] == new_proof_hash[:6]
 
 
 if __name__ == '__main__':
@@ -61,7 +63,8 @@ if __name__ == '__main__':
     if len(sys.argv) > 1:
         node = sys.argv[1]
     else:
-        node = "https://lambda-coin.herokuapp.com/api"
+        # node = "https://lambda-coin.herokuapp.com/api"
+        node = "https://lambda-coin-test-1.herokuapp.com/api"
 
     coins_mined = 0
 
