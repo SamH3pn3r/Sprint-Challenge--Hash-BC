@@ -22,9 +22,9 @@ def proof_of_work(last_proof):
 
     start = timer()
 
+    last_hash = hashlib.sha256(f'{last_proof}'.encode()).hexdigest()
     proof = last_proof
     
-    last_hash = hashlib.sha256(f'{last_proof}'.encode()).hexdigest()
 
     while valid_proof(last_hash, proof) is False:
         proof += 1
@@ -43,7 +43,7 @@ def valid_proof(last_hash, proof):
     guess = f'{proof}'.encode()
 
     guess_hash = hashlib.sha256(guess).hexdigest()
-    print(guess_hash[:6], last_hash[-6:])
+    # print(guess_hash[:6], last_hash[-6:])
 
     return   guess_hash[:6] == last_hash[-6:]
 
